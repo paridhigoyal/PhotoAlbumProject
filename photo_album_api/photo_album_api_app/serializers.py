@@ -25,7 +25,14 @@ class AlbumSerializer(serializers.ModelSerializer):
         model = Album
         fields = ['photos', 'name', 'desc', 'creation_date']
         
-
+        
+    def create(self, validated_data):
+        photos_data = validated_data.pop('photos')
+        album=Album.objects.create(**validated_data)
+        for photo_data in photos_data :
+            Photo.objects.create(album=album, **photo_data)
+        return album
+        
 
 class UserSerializer(serializers.ModelSerializer):
     
